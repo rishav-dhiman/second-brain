@@ -1,0 +1,66 @@
+@import url('https://fonts.googleapis.com/css2?family=Doto:wght@100..900&family=Nunito:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-primary: #5046e4;
+  --color-primary-hover: #4338ca;
+  --color-primary-light: #e0e7ff;
+  --color-lightpurple: #e8e5ff;
+  --color-darkpurple: #6c63ff;
+  --color-accent-amber: #f59e0b;
+  --color-accent-rose: #f43f5e;
+  --color-dark-surface: #18181b;
+  --color-dark-surface-hover: #27272a;
+}
+
+html, body {
+  font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.font-doto {
+  font-family: 'Doto', sans-serif;
+  font-optical-sizing: auto;
+  font-variation-settings: "ROND" 100;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.2s ease-out;
+}
+
+.animate-slideUp {
+  animation: slideUp 0.2s ease-out;
+}
+
+.transition-smooth {
+  transition: all 0.15s ease-in-out;
+}
+
+/* Twitter's widgets.js stamps an inline pixel width on the tweet iframe at
+   hydration time; a masonry column can end up narrower than that after a
+   window resize, which would spill the embed over its card. Anchored on
+   Card's own .tweet-embed container — the widget's classes are its internals. */
+.tweet-embed iframe,
+.twitter-tweet-rendered {
+  max-width: 100% !important;
+}

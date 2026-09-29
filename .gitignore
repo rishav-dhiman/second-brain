@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+*.tsbuildinfo
+coverage/
+
+# Environment / secrets — never commit
+.env
+.env.local
+.env.production
+
+# Logs
+*.log
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+Desktop.ini
+.vscode/*
+!.vscode/extensions.json
+.idea
+
+# Local-only documentation — stays on the author's machine;
+# this repo carries a single root README.md instead.
+PROJECT_DOCUMENTATION.md
+PROJECT_PROTOTYPE.md
+UPGRADE_SUMMARY.md
+brainly-backend/README.md
+brainly-frontend/README.md
