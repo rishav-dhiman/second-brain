@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { api, getErrorMessage } from "../lib/api";
 import { useToast } from "../hooks/useToast";
 import { useTwitterWidgets } from "../hooks/useTwitterWidgets";
@@ -60,7 +60,7 @@ export function Dashboard() {
 
   useTwitterWidgets();
 
-  const toggleFavorite = (id: string) => {
+  const toggleFavorite = useCallback((id: string) => {
     setFavorites((prev) => {
       let updated: string[];
       if (prev.includes(id)) {
@@ -78,7 +78,7 @@ export function Dashboard() {
       }
       return updated;
     });
-  };
+  }, [addToast]);
 
   // Global keyboard shortcuts
   useEffect(() => {
@@ -128,7 +128,7 @@ export function Dashboard() {
     };
   }, [addToast, reloadKey]);
 
-  const removeContentLocally = (id: string) => {
+  const removeContentLocally = useCallback((id: string) => {
     setContents((prev) => prev.filter((c) => c._id !== id));
     setFavorites((prev) => {
       const next = prev.filter((favId) => favId !== id);
@@ -140,9 +140,9 @@ export function Dashboard() {
       return next;
     });
     setTagsVersion((v) => v + 1);
-  };
+  }, []);
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = useCallback(async (id: string) => {
     try {
       await api.delete("/api/v1/content", { data: { contentId: id } });
       removeContentLocally(id);
@@ -150,7 +150,22 @@ export function Dashboard() {
     } catch (error) {
       addToast(getErrorMessage(error, "Failed to delete content"), "error");
     }
-  };
+  }, [addToast, removeContentLocally]);
+
+  // Ref mirror keeps openEditById stable so memo(Card) keeps working.
+  const contentsRef = useRef<ContentItem[]>([]);
+  useEffect(() => {
+    contentsRef.current = contents;
+  }, [contents]);
+
+  const openEditById = useCallback((id: string) => {
+    const matched = contentsRef.current.find((c) => c._id === id);
+    if (matched) setEditingContent(matched);
+  }, []);
+
+  const handleTagClick = useCallback((tagId: string) => {
+    setFilter("tag:" + tagId);
+  }, []);
 
   const filteredContents = useMemo(() => {
     // 1. Filter by category / favorites / tag / search
@@ -333,12 +348,12 @@ export function Dashboard() {
                   link={content.link}
                   type={content.type}
                   tags={content.tags}
-                  onTagClick={(tagId) => setFilter("tag:" + tagId)}
+                  onTagClick={handleTagClick}
                   createdAt={content.createdAt}
                   isFavorite={favorites.includes(content._id)}
-                  onToggleFavorite={() => toggleFavorite(content._id)}
-                  onDelete={() => removeContentLocally(content._id)}
-                  onEdit={() => setEditingContent(content)}
+                  onToggleFavorite={toggleFavorite}
+                  onDelete={removeContentLocally}
+                  onEdit={openEditById}
                 />
               )}
             />

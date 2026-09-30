@@ -7,7 +7,7 @@ import { TagIcon } from "../../icons/TagIcon";
 import { TwitterIcon } from "../../icons/TwitterIcon";
 import { YouTubeIcon } from "../../icons/YoutubeIcon";
 import { api } from "../../lib/api";
-import { useState } from "react";
+import { memo, useState } from "react";
 import { useToast } from "../../hooks/useToast";
 import { getYouTubeEmbedUrl } from "../../utils/youtube";
 import { TagChips, type TagChipItem } from "./TagChips";
@@ -21,15 +21,15 @@ export interface CardProps {
   type?: PostType;
   tags?: TagChipItem[];
   onTagClick?: (tagId: string) => void;
-  onDelete?: () => void;
-  onEdit?: () => void;
+  onDelete?: (contentId: string) => void;
+  onEdit?: (contentId: string) => void;
   createdAt?: string;
   readOnly?: boolean;
   isFavorite?: boolean;
-  onToggleFavorite?: () => void;
+  onToggleFavorite?: (contentId: string) => void;
 }
 
-export const Card = ({
+export const Card = memo(function Card({
   contentId,
   title,
   link,
@@ -42,7 +42,7 @@ export const Card = ({
   readOnly = false,
   isFavorite = false,
   onToggleFavorite,
-}: CardProps) => {
+}: CardProps) {
   const [isDeleting, setIsDeleting] = useState(false);
   const { addToast } = useToast();
 
@@ -57,7 +57,7 @@ export const Card = ({
       });
       addToast("Content deleted successfully", "success");
       if (onDelete) {
-        onDelete();
+        onDelete(contentId);
       }
     } catch {
       addToast("Failed to delete content", "error");
@@ -92,7 +92,7 @@ export const Card = ({
     <div
       onClick={() => {
         if (!readOnly && onEdit) {
-          onEdit();
+          onEdit(contentId);
         }
       }}
       className={`w-full h-fit bg-white dark:bg-zinc-900 rounded-xl shadow-xs transition-smooth flex flex-col group p-4 relative ${
@@ -128,7 +128,7 @@ export const Card = ({
             onClick={(e) => {
               e.stopPropagation();
               if (onToggleFavorite) {
-                onToggleFavorite();
+                onToggleFavorite(contentId);
               }
             }}
             className={`shrink-0 p-1 rounded-md transition-smooth cursor-pointer ${
@@ -244,7 +244,7 @@ export const Card = ({
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                onEdit();
+                onEdit(contentId);
               }}
               className="p-1.5 rounded-md text-slate-500 hover:text-primary hover:bg-slate-100 dark:text-zinc-400 dark:hover:text-primary-light dark:hover:bg-zinc-800 transition-smooth cursor-pointer"
               title="Edit note"
@@ -272,5 +272,5 @@ export const Card = ({
       </div>
     </div>
   );
-};
+});
 export default Card;
