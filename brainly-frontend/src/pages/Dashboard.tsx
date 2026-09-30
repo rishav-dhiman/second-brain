@@ -167,6 +167,9 @@ export function Dashboard() {
     setFilter("tag:" + tagId);
   }, []);
 
+  // Stable so memo(Sidebar) isn't defeated by a new closure every render.
+  const handleTagsChanged = useCallback(() => setReloadKey((k) => k + 1), []);
+
   const filteredContents = useMemo(() => {
     // 1. Filter by category / favorites / tag / search
     const filtered = contents.filter((c) => {
@@ -209,7 +212,7 @@ export function Dashboard() {
         onFilterChange={setFilter}
         activeFilter={filter}
         refreshKey={tagsVersion}
-        onTagsChanged={() => setReloadKey((k) => k + 1)}
+        onTagsChanged={handleTagsChanged}
       />
 
       {/* Main Content Area */}

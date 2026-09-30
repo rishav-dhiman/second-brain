@@ -10,6 +10,7 @@ import { api } from "../../lib/api";
 import { memo, useState } from "react";
 import { useToast } from "../../hooks/useToast";
 import { getYouTubeEmbedUrl } from "../../utils/youtube";
+import { YouTubeEmbed, TweetEmbed } from "./LazyEmbed";
 import { TagChips, type TagChipItem } from "./TagChips";
 
 export type PostType = "youtube" | "twitter" | "document" | "link";
@@ -159,36 +160,14 @@ export const Card = memo(function Card({
       <div className="mb-3">
         {type === "youtube" ? (
           youTubeEmbedUrl ? (
-            <div
-              className="w-full aspect-video rounded-lg overflow-hidden bg-black border border-slate-200 dark:border-zinc-800"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <iframe
-                className="w-full h-full block"
-                src={youTubeEmbedUrl}
-                title={title}
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                referrerPolicy="strict-origin-when-cross-origin"
-                allowFullScreen
-              />
-            </div>
+            <YouTubeEmbed link={link} title={title} />
           ) : (
             <div className="p-3 bg-slate-50 dark:bg-zinc-800/60 rounded-lg border border-slate-200 dark:border-zinc-700">
               <p className="text-xs text-slate-500 dark:text-zinc-400 truncate font-mono">{link}</p>
             </div>
           )
         ) : type === "twitter" ? (
-          <div
-            className="tweet-embed p-3 bg-slate-50 dark:bg-zinc-800/60 rounded-lg border border-slate-200 dark:border-zinc-700"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <blockquote className="twitter-tweet" data-dnt="true">
-              <a href={link} className="text-xs text-primary hover:underline">
-                View Tweet
-              </a>
-            </blockquote>
-          </div>
+          <TweetEmbed link={link} />
         ) : type === "document" ? (
           <div className="p-3 bg-slate-50 dark:bg-zinc-800/60 rounded-xl border border-slate-200 dark:border-zinc-700 hover:border-slate-300 dark:hover:border-zinc-600 transition-smooth">
             <p className="text-xs text-slate-700 dark:text-zinc-300 whitespace-pre-wrap line-clamp-5 leading-relaxed font-normal">
