@@ -1,4 +1,4 @@
-import { memo, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BrainLogo } from "../../icons/BrainLogo";
 import { FileIcon } from "../../icons/FileIcon";
@@ -33,7 +33,7 @@ function getInitials(name: string): string {
   return (parts[0][0] + parts[1][0]).toUpperCase();
 }
 
-export const Sidebar = memo(function Sidebar({
+export function Sidebar({
   onFilterChange,
   activeFilter,
   refreshKey = 0,
@@ -304,5 +304,5 @@ export const Sidebar = memo(function Sidebar({
       </div>
     </aside>
   );
-});
+}
 export default Sidebar;
