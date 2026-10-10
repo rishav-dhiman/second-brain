@@ -159,7 +159,7 @@ Target topology: **frontend on Vercel** (static hosting), **backend on Render** 
 ### Backend → Render
 
 1. Render → New → Web Service → connect this repo → set **root directory: `brainly-backend`**
-2. Build command: `npm ci && npm run build` · Start command: `npm start` · health check path: `/health`
+2. Build command: `npm ci --include=dev && npm run build` (the flag matters — Render runs builds with `NODE_ENV=production`, which otherwise skips devDependencies and the TypeScript build fails) · Start command: `npm start` · health check path: `/health`
 3. Environment: `MONGO_URL`, `JWT_PASSWORD` (long random), `CORS_ORIGINS=https://<your-app>.vercel.app`
 4. Deploy and note the service URL: `https://<your-api>.onrender.com`
 
