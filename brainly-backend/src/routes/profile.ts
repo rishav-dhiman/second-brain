@@ -36,7 +36,8 @@ profileRouter.get("/", requireAuth, async (req, res) => {
 
   return res.json({
     username: user.username,
-    createdAt: user.createdAt ?? null,
+    // Legacy users predate the timestamps option; their ObjectId still embeds the signup time.
+    createdAt: user.createdAt ?? user._id.getTimestamp(),
     stats: { contents: contentCount, tags: tagCount },
   });
 });
