@@ -10,7 +10,7 @@ async function main() {
   const server = app.listen(config.port, () => {
     logger.info(
       { port: config.port, env: config.nodeEnv },
-      "Brainly API listening"
+      "Second Brain API listening"
     );
   });
 

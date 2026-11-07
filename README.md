@@ -14,14 +14,14 @@ A full-stack personal knowledge management app: save YouTube videos, tweets/X po
 
 ## Tech stack
 
-**Backend** (`brainly-backend/`)
+**Backend** (`second-brain-backend/`)
 - Node.js + Express 5, TypeScript (CommonJS, `tsc -b` build)
 - MongoDB + Mongoose 9
 - JWT auth (jsonwebtoken) + bcrypt
 - zod-validated env config, helmet, express-rate-limit, pino structured logging
 - Vitest + supertest + mongodb-memory-server (66 tests)
 
-**Frontend** (`brainly-frontend/`)
+**Frontend** (`second-brain-frontend/`)
 - React 19 + React Router 7, TypeScript
 - Vite 8, Tailwind CSS 4
 - Axios client with interceptors, ESLint 10 (React Compiler rules)
@@ -30,8 +30,8 @@ A full-stack personal knowledge management app: save YouTube videos, tweets/X po
 
 ```
 second-brain/
-├── brainly-backend/    # Express + Mongoose API   → http://localhost:5000
-└── brainly-frontend/   # React + Vite SPA         → http://localhost:5173
+├── second-brain-backend/    # Express + Mongoose API   → http://localhost:5000
+└── second-brain-frontend/   # React + Vite SPA         → http://localhost:5173
 ```
 
 ## Quick start
@@ -41,7 +41,7 @@ Prerequisites: Node.js 18+ (Node 24 recommended), npm, and a MongoDB database ([
 **1. Backend**
 
 ```bash
-cd brainly-backend
+cd second-brain-backend
 npm install
 cp .env.example .env      # then fill in MONGO_URL and JWT_PASSWORD
 npm run dev               # http://localhost:5000
@@ -50,7 +50,7 @@ npm run dev               # http://localhost:5000
 **2. Frontend** (second terminal)
 
 ```bash
-cd brainly-frontend
+cd second-brain-frontend
 npm install
 npm run dev               # http://localhost:5173
 ```
@@ -146,7 +146,7 @@ helmet · CORS allowlist · rate limiting (300 req/15 min global, 20 req/15 min 
 ## Testing
 
 ```bash
-cd brainly-backend
+cd second-brain-backend
 npm test
 ```
 
@@ -158,14 +158,14 @@ Target topology: **frontend on Vercel** (static hosting), **backend on Render** 
 
 ### Backend → Render
 
-1. Render → New → Web Service → connect this repo → set **root directory: `brainly-backend`**
+1. Render → New → Web Service → connect this repo → set **root directory: `second-brain-backend`**
 2. Build command: `npm ci --include=dev && npm run build` (the flag matters — Render runs builds with `NODE_ENV=production`, which otherwise skips devDependencies and the TypeScript build fails) · Start command: `npm start` · health check path: `/health`
 3. Environment: `MONGO_URL`, `JWT_PASSWORD` (long random), `CORS_ORIGINS=https://<your-app>.vercel.app`
 4. Deploy and note the service URL: `https://<your-api>.onrender.com`
 
 ### Frontend → Vercel
 
-1. Vercel → Add New Project → import the **same repo** → set **root directory: `brainly-frontend`** (Vite is auto-detected; `vercel.json` is already in that folder)
+1. Vercel → Add New Project → import the **same repo** → set **root directory: `second-brain-frontend`** (Vite is auto-detected; `vercel.json` is already in that folder)
 2. Environment: `VITE_BACKEND_URL=https://<your-api>.onrender.com`, `VITE_APP_URL=https://<your-app>.vercel.app`
 3. Deploy. `vercel.json` rewrites every path to `index.html`, so client-side routes (`/brain/:hash`, `/settings`, …) survive refreshes and deep links.
 
